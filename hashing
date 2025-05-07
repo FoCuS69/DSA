@@ -1,187 +1,84 @@
-//Assignment no 1
-
 #include <iostream>
 using namespace std;
 
-class HashTable{
-
+class HashTable {
 public:
-int key;
-int index;
-
+    int key;
+    int index;
 };
 
-class Hashing
-{
- private:
- HashTable H[10];
- public:
+class Hashing {
+private:
+    HashTable H[10];
+public:
+    Hashing() {
+        for (int i = 0; i < 10; i++) {
+            H[i].key = -1;
+            H[i].index = i;
+        }
+    }
 
- Hashing(){
+    void display() {
+        cout << "Hash Table:\n";
+        for (int i = 0; i < 10; i++) {
+            cout << H[i].key << "\t\t" << H[i].index << endl;
+        }
+    }
 
- for(int i=0;i<10;i++)
- {
- H[i].key=-1;
- H[i].index=i;
- }
- }
+    void insert(int choice) {
+        int key, pos;
+        cout << "Enter telephone number: ";
+        cin >> key;
+        pos = key % 10;
 
-  void display();
-  void insert(int p_ch);
-  int LinearP(int position);
-  int QuadraticP(int position);
+        if (H[pos].key == -1) {
+            H[pos].key = key;
+        } else {
+            int newPos = (choice == 1) ? linearProbing(pos) : quadraticProbing(pos);
+            if (newPos != -1)
+                H[newPos].key = key;
+            else
+                cout << "Hash table is full.\n";
+        }
+    }
+
+    int linearProbing(int pos) {
+        for (int i = 0; i < 10; i++) {
+            int newPos = (pos + i) % 10;
+            if (H[newPos].key == -1) return newPos;
+        }
+        return -1;
+    }
+
+    int quadraticProbing(int pos) {
+        for (int i = 0; i < 10; i++) {
+            int newPos = (pos + i * i) % 10;
+            if (H[newPos].key == -1) return newPos;
+        }
+        return -1;
+    }
 };
 
-void Hashing::display()
-{
-  cout<<"Hash Table is"<<endl;
-  for(int i=0;i<10;i++)
-  {
-     cout<<H[i].key<<"\t\t\t\t\t"<<H[i].index<<endl;
+int main() {
+    Hashing hashTable;
+    int choice, probingChoice;
 
-  }
+    do {
+        cout << "\n----MENU----\n1. Insert\n2. Display\n3. Exit\nEnter choice: ";
+        cin >> choice;
 
+        if (choice == 1) {
+            cout << "Probing method:\n1. Linear\n2. Quadratic\nEnter choice: ";
+            cin >> probingChoice;
+            hashTable.insert(probingChoice);
+        } else if (choice == 2) {
+            hashTable.display();
+        } else if (choice != 3) {
+            cout << "Invalid choice.\n";
+        }
+    } while (choice != 3);
+
+    cout << "Program ended.\n";
+    return 0;
 }
 
-void Hashing::insert(int p_ch)
-{
- int pos;
- int key1;
-
- cout<<"Enter the Telephone number\n";
- cin>>key1;
- pos=key1%10;
-
- if(H[pos].key==-1)
- {
-  H[pos].key=key1;
- }
- else if(p_ch==1){
- int temp=LinearP(pos);
- H[temp].key=key1;
- }
- else if(p_ch==2){
- int temp=QuadraticP(pos);
- H[temp].key=key1;
- }
-}
-
-int Hashing::LinearP(int position) {
-     for (int i = 0; i < 10; i++) {
-          int newPos = (position + i) % 10;
-          if (H[newPos].key == -1) {
-              return newPos;
-          }
-     }
-     return -1;
-}
-
-
-int Hashing::QuadraticP(int position) {
-     for (int i = 0; i < 10; i++) {
-          int newPos = (position + (i * i)) % 10;
-          if (H[newPos].key == -1) {
-              return newPos;
-          }
-     }	
-     return -1;
-}
-
-
-int main(){
-
-Hashing obj;
-int ch;
-int p_choice;
-
-do{
-  cout<<"----MENU----\n";
-  cout<<"1. Insert\n";
-  cout<<"2. Display\n";
-  cout<<"3. Exit\n";
-  cout<<"Enter your choice\n";
-  cin>>ch;
-  if(ch==1){
-  cout<<"Enter the probing choice\n1. Linear Probing\n2. Quadratic Probing\n";
-  cin>>p_choice;
-  }
-  else{
-  p_choice=0;
-  }
-  switch(ch){
-  case 1:
-  {
-    obj.insert(p_choice);
-    break;
-  }
-  case 2:
-  {
-  obj.display();
-  break;
-  }
-  case 3:
-  {
-       cout<<"End of program";
-       break;
-  }
-  default:
-  {
-  cout<<"Enter valid choice :\n";
-  }
-  }
-
-}while(ch!=3);
-
-}
-
-output:
-gescoe@gescoe-OptiPlex-3010:~/Desktop/SE-A-45$ g++ Hashing.cpp
-gescoe@gescoe-OptiPlex-3010:~/Desktop/SE-A-45$ ./a.out
-----MENU----
-1. Insert
-2. Display
-3. Exit
-Enter your choice
-1
-Enter the probing choice
-1. Linear Probing
-2. Quadratic Probing
-1
-Enter the Telephone number
-951878884
-----MENU----
-1. Insert
-2. Display
-3. Exit
-Enter your choice
-1
-Enter the probing choice
-1. Linear Probing
-2. Quadratic Probing
-2
-Enter the Telephone number
-976700110
-----MENU----
-1. Insert
-2. Display
-3. Exit
-Enter your choice
-2
-Hash Table is
-976700110					
-- 1					
-- 1					
-- 1					
-951878884					
-- 1					
-- 1					
-- 1					
-- 1					
-- 1					
-----MENU----
-1. Insert
-2. Display
-3. Exit
-Enter your choice
-3
-End of programgescoe@gescoe-OptiPlex-3010:~/Desktop/SE-A-5$
